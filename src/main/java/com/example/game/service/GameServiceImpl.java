@@ -51,6 +51,8 @@ public class GameServiceImpl implements GameService{
     public void deleteGame(Long id) {
         Game game = gameRepository.findById(id).orElseThrow(()->new GameNotFoundException("Game with id: " + id + " not found"));
         game.setStatus(false);
+
+        gameRepository.save(game);
     }
 
     @Override
@@ -63,18 +65,18 @@ public class GameServiceImpl implements GameService{
 
     @Override
     public void updateGameById(GameRequest gameRequest, Long id) {
-        Optional<Game> gameRequest1 = gameRepository.findById(id);
-        gameRepository.save(Game.builder().name(gameRequest.getName()).releaseYear(gameRequest.getReleaseYear())
-                .company(gameRequest.getCompany()).category(gameRequest.getCategory()).price(gameRequest.getPrice()).build());
-
+        gameRepository.save(Game.builder().id(id).name(gameRequest.getName()).releaseYear(gameRequest.getReleaseYear())
+                .company(gameRequest.getCompany()).category(gameRequest.getCategory()).price(gameRequest.getPrice())
+                .status(gameRequest.getStatus()).build());
     }
 
     @Override
     public void updateGameByName(GameRequest gameRequest, String name) {
+        Game gameRequest1 = gameRepository.findByName(name).orElseThrow(()->new GameNotFoundException("Game with name: " + name + " not found"));
 
-        gameRequest.setName(name);
-        gameRepository.save(Game.builder().name(gameRequest.getName()).releaseYear(gameRequest.getReleaseYear())
-                .company(gameRequest.getCompany()).category(gameRequest.getCategory()).price(gameRequest.getPrice()).build());
-
+        gameRepository.save(Game.builder().id(gameRequest1.getId()).name(gameRequest.getName()).releaseYear(gameRequest.getReleaseYear())
+                .company(gameRequest.getCompany()).category(gameRequest.getCategory()).price(gameRequest.getPrice())
+                .status(gameRequest.getStatus()).build());
     }
+
 }

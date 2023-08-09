@@ -6,6 +6,7 @@ import com.example.game.model.GameRequest;
 import com.example.game.model.GameResponse;
 import com.example.game.service.GameServiceImpl;
 import com.example.game.service.util.AccountServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -51,5 +52,9 @@ public class GameController {
     @PostMapping("/user/{id}")
     public AccountResponse getAccountById(@PathVariable String id){
         return accountService.getAccountById(id);
+    }
+    @PostMapping("linkAGame/{id}")
+    public void linkAGameWithAnAccount(@PathVariable Long id, Long idGame) throws JsonProcessingException {
+        accountService.linkGameWithAnAccount(idGame, id);
     }
 }
